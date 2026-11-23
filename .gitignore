@@ -1,0 +1,12 @@
+# 压缩包
+*.zip
+
+# 系统与缓存
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+
+# 临时文件
+*.tmp
+*.log
