@@ -14,6 +14,7 @@
 8. [核对远端内容](#8-核对远端内容)
 9. [日常迭代再推送](#9-日常迭代再推送)
 10. [注意事项清单](#10-注意事项清单)
+11. [推送失败排障](#11-推送失败排障)
 
 ---
 
@@ -167,3 +168,40 @@ git push origin v1.0.1
 - **凭据安全**：token、密码不写进任何文件；授权走登录流程，不落地到仓库。
 - **文件夹名一致**：克隆后不要改 Skill 文件夹名，否则可能无法被识别。
 - **历史提交**：已推送的提交记录无法靠修改本地配置消除作者信息；需要匿名化时要重写历史或重建仓库。
+
+## 11. 推送失败排障
+
+### 现象：`Recv failure: Connection was reset`
+
+```
+fatal: unable to access 'https://github.com/<owner>/<repo>.git/': Recv failure: Connection was reset
+```
+
+**常见原因**：本机开启了系统代理（浏览器/网页走代理正常），但 git 没有配置代理，直连 GitHub 被重置。
+
+**排查步骤**：
+
+1. 查看 Windows 系统代理端口：设置 → 网络和 Internet → 代理，或注册表 `HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings` 的 `ProxyServer`（形如 `127.0.0.1:7897`）。
+2. 确认代理端口在监听：`Test-NetConnection 127.0.0.1 -Port <端口>`。
+3. 给当前仓库配置局部代理（只影响本仓库，不污染全局）：
+
+```bash
+git config --local http.proxy http://127.0.0.1:<端口>
+git config --local https.proxy http://127.0.0.1:<端口>
+git push
+```
+
+4. 取消局部代理：
+
+```bash
+git config --local --unset http.proxy
+git config --local --unset https.proxy
+```
+
+> 代理端口随代理软件变化；换网络环境后若再次连接重置，先核对端口是否仍有效。局部代理写在仓库 `.git/config` 中，不会被提交入库。
+
+### 其他常见问题
+
+- **首次推送要求登录**：按弹窗完成授权；凭据保存在本机凭据管理器，不会写进仓库。
+- **远端已有 README 导致冲突**：建仓库时勾选了自动初始化。可先 `git pull --rebase origin main` 合并，或重建空仓库后再推。
+- **LF/CRLF 警告**：Windows 下换行符提示，不影响内容，可忽略。
