@@ -30,9 +30,16 @@ bid-technical-proposal/
 
 ## 安装
 
+详细步骤见 [INSTALL.md](INSTALL.md)（同事一页纸安装说明）：
+
 1. 克隆或下载本仓库。
 2. 将 `bid-technical-proposal/` 整个文件夹复制到所用 Agent 环境的 `workspace/.user_skills/` 目录下。
 3. 新开会话后自动加载；说出"写技术方案 / 做偏离表 / 核查符合性"等即可触发。
+
+## 文档
+
+- [INSTALL.md](INSTALL.md)：面向使用者的安装步骤、验证方法与常见问题。
+- [docs/publish-to-github.md](docs/publish-to-github.md)：面向维护者的上传 GitHub 全流程、命令说明与注意事项。
 
 ## 使用与脱敏说明
 
